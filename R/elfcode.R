@@ -84,3 +84,26 @@ elfcode_run <- function(elfcode, r = rep(0, 6), max = 0, print = FALSE,
   res <- .Call(Crun, r, elfcode$ip, elfcode$program, max, print, trace)
   res
 }
+
+
+##' Convert verbose to minimal elfcode
+##' @title Convert verbose to minimal elfcode
+##'
+##' @inheritParams elfcode_compile
+##'
+##' @param output Output destination - either a filename or
+##'   \code{NULL} to return a character vector
+##'
+##' @export
+elfcode_min <- function(lines, file = NULL, output = NULL) {
+  if (!is.null(file)) {
+    lines <- readLines(file)
+  }
+  res <- preprocess(lines)
+  if (is.null(output)) {
+    res
+  } else {
+    writeLines(res, output)
+    output
+  }
+}

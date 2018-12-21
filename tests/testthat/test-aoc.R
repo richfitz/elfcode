@@ -21,3 +21,11 @@ test_that("day19 - tuned", {
   res <- elfcode_run(p, r = r, max = 18801)
   expect_identical(res, list(c(1256L, 1L, 31L, 961L, 99L, 939L), 18800))
 })
+
+
+test_that("minimise", {
+  dest <- elfcode_min(file = "tuned19.txt", output = tempfile())
+  expect_identical(elfcode_compile(file = dest),
+                   elfcode_compile(file = "tuned19.txt"))
+  expect_identical(elfcode_min(file = dest), readLines(dest))
+})
