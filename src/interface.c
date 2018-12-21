@@ -14,10 +14,10 @@ SEXP r_run(SEXP r_r, SEXP r_ip, SEXP r_program, SEXP r_max, SEXP r_print,
   int *trace = INTEGER(r_trace);
   bool print = INTEGER(r_print)[0];
   r_r = PROTECT(duplicate(r_r));
-  int n = run(INTEGER(r_r), ip, program, len, max, print, trace);
+  int64_t n = run(INTEGER(r_r), ip, program, len, max, print, trace);
 
   SEXP ret = PROTECT(allocVector(VECSXP, 2));
-  SEXP r_n = PROTECT(ScalarInteger(n));
+  SEXP r_n = PROTECT(ScalarReal((double) n));
   SET_VECTOR_ELT(ret, 0, r_r);
   SET_VECTOR_ELT(ret, 1, r_n);
 

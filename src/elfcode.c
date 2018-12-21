@@ -96,17 +96,15 @@ void execute(int *r, int op, int a, int b, int c) {
 }
 
 
-int run(int *r, const int ip, const int *program, const int len, int max,
-        bool print, int *trace) {
+int64_t run(int *r, const int ip, const int *program, const int len, int max,
+            bool print, int *trace) {
   int ip_value = r[ip];
   const int *p;
-  size_t i = 0;
-  while (1) {
-    if (max > 0 && i >= (size_t)max) {
+  int64_t i = 0;
+
+  while (ip_value < len) {
+    if (max > 0 && i >= (int64_t)max) {
       return -(int)i;
-    }
-    if (ip_value >= len) {
-      return i;
     }
     p = program + ip_value * 4;
     if (print) {
@@ -122,4 +120,5 @@ int run(int *r, const int ip, const int *program, const int len, int max,
     ip_value = r[ip] + 1;
     ++i;
   }
+  return i;
 }
