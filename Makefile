@@ -1,20 +1,13 @@
 PACKAGE := $(shell grep '^Package:' DESCRIPTION | sed -E 's/^Package:[[:space:]]+//')
 RSCRIPT = Rscript --no-init-file
 
-all: install elfx
+all: elfx
 
 elfx: src/elfcode.c src/elfcode.h src/elfx.c
 	gcc -o $@ -O2 -Wall -ansi -Wextra -std=c99 -DELFCODE_STANDALONE=1 src/elfcode.c src/elfcode.h src/elfx.c
 
 test:
 	${RSCRIPT} -e 'library(methods); devtools::test()'
-
-test_leaks: .valgrind_ignore
-	R -d 'valgrind --leak-check=full --suppressions=.valgrind_ignore' -e 'devtools::test()'
-
-.valgrind_ignore:
-	R -d 'valgrind --leak-check=full --gen-suppressions=all --log-file=$@' -e 'library(testthat)'
-	sed -i '/^=/ d' $@
 
 roxygen:
 	@mkdir -p man
@@ -34,28 +27,6 @@ check_all:
 
 clean:
 	rm -f src/*.o src/*.so src/*.dll
-	rm -rf src/ring.so.dSYM
+	rm -f elfx
 
-autodoc:
-	${RSCRIPT} autodoc.R process
-
-staticdocs:
-	@mkdir -p inst/staticdocs
-	${RSCRIPT} -e "library(methods); staticdocs::build_site()"
-	rm -f vignettes/*.html
-	@rmdir inst/staticdocs
-website: staticdocs
-	./update_web.sh
-
-README.md: README.Rmd
-	Rscript -e 'library(methods); devtools::load_all(); knitr::knit("README.Rmd")'
-	sed -i.bak 's/[[:space:]]*$$//' $@
-	rm -f $@.bak
-
-vignettes/%.Rmd: vignettes/src/%.R
-	${RSCRIPT} -e 'library(sowsear); sowsear("$<", output="$@")'
-vignettes: vignettes/ring.Rmd vignettes/ring_applications.Rmd
-	${RSCRIPT} -e 'library(methods); devtools::build_vignettes()'
-
-# No real targets!
 .PHONY: all test document install vignettes
