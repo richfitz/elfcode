@@ -4,6 +4,23 @@
 
 #ifndef ELFCODE_STANDALONE
 #include <R.h>
+static const char * operator_names[] = {
+  "addr",
+  "addi",
+  "mulr",
+  "muli",
+  "banr",
+  "bani",
+  "borr",
+  "bori",
+  "setr",
+  "seti",
+  "gtir",
+  "gtri",
+  "gtrr",
+  "eqir",
+  "eqri",
+  "eqrr"};
 #endif
 
 enum operators {
@@ -23,25 +40,6 @@ enum operators {
   EQIR,
   EQRI,
   EQRR };
-
-
-static const char * operator_names[] = {
-  "addr",
-  "addi",
-  "mulr",
-  "muli",
-  "banr",
-  "bani",
-  "borr",
-  "bori",
-  "setr",
-  "seti",
-  "gtir",
-  "gtri",
-  "gtrr",
-  "eqir",
-  "eqri",
-  "eqrr"};
 
 
 void execute(int *r, int op, int a, int b, int c) {
