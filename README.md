@@ -1,6 +1,8 @@
 # elfcode
 
 [![Travis build status](https://travis-ci.org/richfitz/elfcode.svg?branch=master)](https://travis-ci.org/richfitz/elfcode)
+[![codecov.io](https://codecov.io/github/richfitz/elfcode/coverage.svg?branch=master)](https://codecov.io/github/richfitz/elfcode?branch=master)
+
 
 Tools for running [elfcode](https://adventofcode.com/2018/day/19) in R.  Includes support for a extended form of the input format that supports comments.
 
