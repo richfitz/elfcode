@@ -45,7 +45,7 @@ enum operators {
 void execute(int *r, int op, int a, int b, int c) {
   switch(op) {
   case ADDR:
-    r[c] = r[a] + r[b]; break;
+    r[c] = r[a] + r[b];
     break;
   case ADDI:
     r[c] = r[a] + b;
