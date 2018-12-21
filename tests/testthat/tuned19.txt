@@ -1,0 +1,67 @@
+;; register 0 = t (total)
+;; register 1 = work
+;; register 2 = a
+;; register 3 = b
+;; register 4 = ip
+;; register 5 = n (target)
+;;
+;; a (register 2) cycles slow, b (register 3) cycles fast
+#ip 4
+
+seti 0 0 2   ;; a = 0
+
+[L]          ;; the outer loop - incrementing 'a'
+addi 2 1 2   ;; a = a + 1
+
+;; test for special case of a square number, using r(3) (where b sits
+;; normally) as a work space
+mulr 2 2 3   ;; aa = a * a
+eqrr 3 5 1   ;; aa == n
+addr 1 4 4   ;; -- increment if true
+addi 4 1 4   ;; -- skip next if false
+addr 2 0 0   ;; t = t + a
+
+gtrr 3 5 1   ;; a * a > n?
+addr 1 4 4   ;; -- increment if true
+addi 4 1 4   ;; -- skip next if false
+seti 99 0 4  ;; EXIT
+
+;; prepare for the main loop here
+setr 2 0 3   ;; b = a
+
+[M]          ;; our main loop - incrementing  'b'
+addi 3 1 3   ;; b = b + 1
+
+[N]
+;; have we found a divisor?
+mulr 3 2 1   ;; ab = a * b
+eqrr 1 5 1   ;; ab == n
+addr 1 4 4   ;; -- increment if true
+addi 4 1 4   ;; -- skip next if false
+seti X 0 4   ;; GOTO X (this conditional is true)
+
+;; have we exhausted possible divisors of 'a' by making 'b' too big?
+mulr 3 2 1   ;; ab = a * b
+gtrr 1 5 1   ;; ab > n
+addr 1 4 4   ;; -- increment if true
+addi 4 1 4   ;; -- skip next if false
+seti Y 0 4   ;; GOTO Y
+
+mulr 3 2 1   ;; ab = a * b
+muli 1 2 1   ;; ab = ab * 2
+gtrr 5 1 1   ;; n > ab * 2
+addr 1 4 4   ;; -- increment if true
+addi 4 1 4   ;; -- skip next if false
+seti Z 0 4   ;; GOTO Z
+seti M 0 4   ;; GOTO M
+
+[X] ;; found a divisor!
+addr 3 0 0   ;; t = t + b
+addr 2 0 0   ;; t = t + a
+
+[Y] ;; 'a' is not a divisor so let's increment 'a' and start again
+seti L 0 4   ;; GOTO L
+
+[Z] ;; we can double b!
+muli 3 2 3   ;; b = b * 2
+seti N 0 4   ;; GOTO N
