@@ -5,14 +5,16 @@
 
 #include "elfcode.h"
 
-SEXP r_run(SEXP r_r, SEXP r_ip, SEXP r_program, SEXP r_max, SEXP r_print) {
+SEXP r_run(SEXP r_r, SEXP r_ip, SEXP r_program, SEXP r_max, SEXP r_print,
+           SEXP r_trace) {
   int ip = INTEGER(r_ip)[0];
-  int len = LENGTH(r_program);
+  int len = LENGTH(r_program) / 4;
   int max = INTEGER(r_max)[0];
   int *program = INTEGER(r_program);
+  int *trace = INTEGER(r_trace);
   bool print = INTEGER(r_print)[0];
   r_r = PROTECT(duplicate(r_r));
-  int n = run(INTEGER(r_r), ip, program, len, max, print);
+  int n = run(INTEGER(r_r), ip, program, len, max, print, trace);
 
   SEXP ret = PROTECT(allocVector(VECSXP, 2));
   SEXP r_n = PROTECT(ScalarInteger(n));
@@ -25,7 +27,7 @@ SEXP r_run(SEXP r_r, SEXP r_ip, SEXP r_program, SEXP r_max, SEXP r_print) {
 
 
 static const R_CallMethodDef call_methods[] = {
-  {"Crun",  (DL_FUNC) &r_run,  5},
+  {"Crun",  (DL_FUNC) &r_run,  6},
   {NULL,    NULL,              0}
 };
 

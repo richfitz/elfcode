@@ -97,24 +97,25 @@ void execute(int *r, int op, int a, int b, int c) {
 
 
 int run(int *r, const int ip, const int *program, const int len, int max,
-        bool print) {
+        bool print, int *trace) {
   int ip_value = r[ip];
   const int *p;
   size_t i = 0;
-  size_t n = max <= 0 ? UINT_MAX : (size_t) max;
   while (1) {
-    if (i >= n) {
+    if (max > 0 && i >= (size_t)max) {
       return -(int)i;
     }
-    if (ip_value > len) {
+    if (ip_value >= len) {
       return i;
     }
     p = program + ip_value * 4;
     if (print) {
-      // note this is hard coded for 6 registers
-      Rprintf("%2d: [%d %d %d %d %d %d] %s %d %d %d\n",
-              ip_value, r[0], r[1], r[2], r[3], r[4], r[5],
-              operator_names[p[0]], p[1], p[2], p[3]);
+      if (trace[ip_value]) {
+        // note this is hard coded for 6 registers
+        Rprintf("%2d: [%d %d %d %d %d %d] %s %d %d %d\n",
+                ip_value, r[0], r[1], r[2], r[3], r[4], r[5],
+                operator_names[p[0]], p[1], p[2], p[3]);
+      }
     }
     r[ip] = ip_value;
     execute(r, p[0], p[1], p[2], p[3]);

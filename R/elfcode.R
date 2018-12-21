@@ -62,17 +62,25 @@ elfcode_compile <- function(lines, file = NULL) {
 ##' @title Run an elfcode program
 ##' @param elfcode Program, "compiled" by \code{\link{elfcode_compile}}
 ##' @param r Initial register states
-##' @param max Maximium number of steps to run
+##' @param max Maximium number of steps to run - zero means run forever
 ##' @param print Logical, indicating if we should print
+##' @param trace Lines to trace, when printing
 ##' @export
-elfcode_run <- function(elfcode, r = rep(0, 6), max = 0, print = FALSE) {
+elfcode_run <- function(elfcode, r = rep(0, 6), max = 0, print = FALSE,
+                        trace = NULL) {
   stopifnot(is.numeric(r) && length(r) == 6 && all(is.finite(r)))
   stopifnot(is.numeric(max) && length(max) == 1 && is.finite(max))
   stopifnot(is.logical(print) && length(print) == 1 && is.finite(print))
   stopifnot(inherits(elfcode, "elfcode"))
 
+  if (is.null(trace)) {
+    trace <- rep(TRUE, length(elfcode$program))
+  } else {
+    trace <- seq_along(elfcode$program) %in% (trace + 1L)
+  }
+
   r <- as.integer(r)
   max <- as.integer(max)
-  res <- .Call(Crun, r, elfcode$ip, elfcode$program, max, print)
+  res <- .Call(Crun, r, elfcode$ip, elfcode$program, max, print, trace)
   res
 }
