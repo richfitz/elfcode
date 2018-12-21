@@ -26,6 +26,10 @@ static const char * operator_names[] = {
   "eqrr"};
 
 int main (int argc, char *argv[])  {
+  if (argc < 2 || argc > 2 + N_REGISTERS) {
+    printf("Usage: elfx <filename> [registers...]\n");
+    exit(1);
+  }
   const char * filename = argv[1];
   FILE* f = fopen(filename, "r");
   char buffer[5];
