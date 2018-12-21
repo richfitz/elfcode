@@ -1,7 +1,10 @@
 PACKAGE := $(shell grep '^Package:' DESCRIPTION | sed -E 's/^Package:[[:space:]]+//')
 RSCRIPT = Rscript --no-init-file
 
-all: install
+all: install elfx
+
+elfx: src/elfcode.c src/elfcode.h src/elfx.c
+	gcc -o $@ -O2 -Wall -ansi -Wextra -std=c99 -DELFCODE_STANDALONE=1 src/elfcode.c src/elfcode.h src/elfx.c
 
 test:
 	${RSCRIPT} -e 'library(methods); devtools::test()'

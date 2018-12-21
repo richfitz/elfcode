@@ -1,8 +1,10 @@
 #include "elfcode.h"
 
 #include <limits.h>
-// for printing:
+
+#ifndef ELFCODE_STANDALONE
 #include <R.h>
+#endif
 
 enum operators {
   ADDR,
@@ -23,7 +25,7 @@ enum operators {
   EQRR };
 
 
-const char * operator_names[] = {
+static const char * operator_names[] = {
   "addr",
   "addi",
   "mulr",
@@ -107,6 +109,7 @@ int64_t run(int *r, const int ip, const int *program, const int len, int max,
       return -(int)i;
     }
     p = program + ip_value * 4;
+#ifndef ELFCODE_STANDALONE
     if (print) {
       if (trace[ip_value]) {
         // note this is hard coded for 6 registers
@@ -115,6 +118,7 @@ int64_t run(int *r, const int ip, const int *program, const int len, int max,
                 operator_names[p[0]], p[1], p[2], p[3]);
       }
     }
+#endif
     r[ip] = ip_value;
     execute(r, p[0], p[1], p[2], p[3]);
     ip_value = r[ip] + 1;
