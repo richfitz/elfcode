@@ -26,7 +26,13 @@ compile <- function(lines) {
   ops <- c("addr", "addi", "mulr", "muli", "banr", "bani", "borr", "bori",
            "setr", "seti", "gtir", "gtri", "gtrr", "eqir", "eqri", "eqrr")
   re1 <- "^#ip (\\d)"
-  re2 <- "^([a-z]+) (\\d+ \\d+ \\d+)"
+  re2 <- "^([a-z]+) ([0-9 ]+)"
+  if (!grepl(re1, lines[[1]])) {
+    stop("Program does not start with an '#ip' declaration")
+  }
+  if (!all(grepl(re2, lines[-1]))) {
+    stop("Program lines must be in the format <oppcode> <registers>")
+  }
   p <- sub(re2, "\\1", lines[-1])
   err <- setdiff(p, ops)
   if (length(err) > 0L) {

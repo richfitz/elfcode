@@ -29,3 +29,11 @@ test_that("minimise", {
                    elfcode_compile(file = "tuned19.txt"))
   expect_identical(elfcode_min(file = dest), readLines(dest))
 })
+
+
+test_that("trace", {
+  p <- elfcode_compile(file = "input19.txt")
+  output <- capture_output(elfcode_run(p, max = 40, print = TRUE, trace = 4))
+  s <- strsplit(output, "\n")[[1]]
+  expect_true(all(grepl("4: \\[0 \\d \\d 1 3 939\\] eqrr 1 5 1", s)))
+})
