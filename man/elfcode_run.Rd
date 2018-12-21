@@ -4,16 +4,19 @@
 \alias{elfcode_run}
 \title{Run an elfcode program}
 \usage{
-elfcode_run(elfcode, r = rep(0, 6), max = 0, print = FALSE)
+elfcode_run(elfcode, r = rep(0, 6), max = 0, print = FALSE,
+  trace = NULL)
 }
 \arguments{
 \item{elfcode}{Program, "compiled" by \code{\link{elfcode_compile}}}
 
 \item{r}{Initial register states}
 
-\item{max}{Maximium number of steps to run}
+\item{max}{Maximium number of steps to run - zero means run forever}
 
 \item{print}{Logical, indicating if we should print}
+
+\item{trace}{Lines to trace, when printing}
 }
 \description{
 Run an elfcode program
