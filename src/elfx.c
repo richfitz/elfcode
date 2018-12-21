@@ -32,6 +32,10 @@ int main (int argc, char *argv[])  {
   }
   const char * filename = argv[1];
   FILE* f = fopen(filename, "r");
+  if (f == NULL) {
+    printf("Failed to open file '%s'\n", filename);
+    exit(1);
+  }
   char buffer[5];
   int ip = 0;
   int *p = calloc(MAX_PROGRAM_LENGTH * 4, sizeof(int));
